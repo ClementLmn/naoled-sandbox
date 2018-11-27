@@ -1,0 +1,10 @@
+int photocellPin = 0;
+int photocellReading;
+
+void setup() {
+	
+}
+
+void loop() {
+	JSONencoder["value"] = photocellReading;	
+}
