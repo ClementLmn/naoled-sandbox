@@ -1,8 +1,10 @@
-#include <Wire.h>
-#include <DS1621.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
-byte addr = (0x90 >> 1) | 0;
-DS1621 sensor=DS1621(addr);
+String arduinoId = "arduino-cafet";
+int photocellPin = 0;
+int photocellReading;
 
 void setup() {
 	Serial.begin(115200);
@@ -15,44 +17,24 @@ void setup() {
 }
 
 void loop() {
-  int stateDoor = digitalRead(0);
-
-  int delayTime = 5000;
-  int i = 1;
-  if(stateDoor){
-    while (1) {
-      int newStateDoor = digitalRead(0);
-
-      if(newStateDoor){
-        int tempAct, tempForm;
-        // On récupère la température en centième de degrés
-        tempAct = sensor.getHrTemp();
-        // On divise par cent pour récupérer la température exacte
-        tempForm = tempAct / 100;
-
-        if(i > 10){
-          Serial.print("La porte est ouverte depuis trop longtemps ! Il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
-        }else if(i == 1){
-          Serial.print("La porte viens de s'ouvrir et il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
-        }else{
-          int timeForm = (delayTime / 1000) * i;
-          Serial.print("La porte est ouverte depuis ");
-          Serial.print(timeForm);
-          Serial.print(" secondes et il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
-        }
-        delay(delayTime);
-      }else{
-        Serial.println("La porte est fermé");
-        break;
-      }
-      i++;
-    }
-  }
-  delay(500);
+	if (WiFi.status() == WL_CONNECTED) {
+		photocellReading = analogRead(photocellPin);
+		int photocellValue = (photocellReading / 1024.0) * 100;
+		StaticJsonBuffer<300> JSONbuffer;
+		JsonObject& JSONencoder = JSONbuffer.createObject();
+		JSONencoder["id"] = arduinoId;
+		JSONencoder["value"] = photocellValue;
+		char JSONmessageBuffer[300];
+		JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
+		Serial.println(JSONmessageBuffer);
+		HTTPClient http;
+		http.begin("http://172.20.10.3:3000/api");
+		http.addHeader("Content-Type", "application/json");
+		int httpCode = http.POST(JSONmessageBuffer);
+		String payload = http.getString();
+		Serial.println(httpCode);
+		Serial.println(payload);
+		http.end();
+	}
+	delay(250);
 }
