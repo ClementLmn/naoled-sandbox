@@ -30,13 +30,13 @@ void boom(uint32_t c, uint8_t wait, uint8_t total, uint8_t wave_size) {
   uint8_t center = ceil(total / 2);
 
   uint16_t i, j;
-  for(i=0; i<total / 2; i++) {
+  for(i=0; i<total + wave_size / 2; i++) {
     strip.setPixelColor(center-i, c);
     strip.setPixelColor(center+i, c);
     strip.setPixelColor(center-i+wave_size, strip.Color(0, 0, 0));
     strip.setPixelColor(center+i-wave_size, strip.Color(0, 0, 0));
     strip.show();
-    delay(50);
+    delay(10);
   }
 
   for(j=0; j<wave_size; j++) {
