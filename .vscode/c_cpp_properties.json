@@ -37,8 +37,8 @@
                 "/Users/clementlemoine/.platformio/packages/framework-arduinoespressif8266/libraries/Wire",
                 "/Users/clementlemoine/.platformio/packages/framework-arduinoespressif8266/libraries/esp8266/src",
                 "/Users/clementlemoine/.platformio/packages/tool-unity",
-                "/Users/clementlemoine/ecv/repos/arduino-test/include",
-                "/Users/clementlemoine/ecv/repos/arduino-test/src",
+                "/Users/clementlemoine/ecv/repos/naoled-sandbox/include",
+                "/Users/clementlemoine/ecv/repos/naoled-sandbox/src",
                 ""
             ],
             "browse": {
@@ -77,8 +77,8 @@
                     "/Users/clementlemoine/.platformio/packages/framework-arduinoespressif8266/libraries/Wire",
                     "/Users/clementlemoine/.platformio/packages/framework-arduinoespressif8266/libraries/esp8266/src",
                     "/Users/clementlemoine/.platformio/packages/tool-unity",
-                    "/Users/clementlemoine/ecv/repos/arduino-test/include",
-                    "/Users/clementlemoine/ecv/repos/arduino-test/src",
+                    "/Users/clementlemoine/ecv/repos/naoled-sandbox/include",
+                    "/Users/clementlemoine/ecv/repos/naoled-sandbox/src",
                     ""
                 ]
             },
@@ -102,5 +102,6 @@
             "cppStandard": "c++11",
             "compilerPath": "/Users/clementlemoine/.platformio/packages/toolchain-xtensa/bin/xtensa-lx106-elf-gcc  -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -Os -mlongcalls -mtext-section-literals -falign-functions=4 -U__STRICT_ANSI__ -ffunction-sections -fdata-sections -Wall"
         }
-    ]
+    ],
+    "version": 4
 }

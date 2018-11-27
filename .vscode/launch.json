@@ -12,7 +12,7 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/Users/clementlemoine/ecv/repos/arduino-test/.pioenvs/nodemcu/firmware.elf",
+            "executable": "/Users/clementlemoine/ecv/repos/naoled-sandbox/.pioenvs/nodemcu/firmware.elf",
             "toolchainBinDir": "/Users/clementlemoine/.platformio/packages/toolchain-xtensa/bin",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -24,7 +24,7 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/Users/clementlemoine/ecv/repos/arduino-test/.pioenvs/nodemcu/firmware.elf",
+            "executable": "/Users/clementlemoine/ecv/repos/naoled-sandbox/.pioenvs/nodemcu/firmware.elf",
             "toolchainBinDir": "/Users/clementlemoine/.platformio/packages/toolchain-xtensa/bin",
             "internalConsoleOptions": "openOnSessionStart"
         }
