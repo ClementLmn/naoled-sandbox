@@ -1,6 +1,5 @@
-#include <ESP8266HTTPClient.h>
-#include <ESP8266WiFi.h>
-#include <ArduinoJson.h>
+#include <Wire.h>
+#include <DS1621.h>
 
 int photocellPin = 0;
 int photocellReading;
@@ -33,4 +32,6 @@ void loop() {
 		http.end();
 	}
 	delay(250);
+	byte addr = (0x90 >> 1) | 0;
+	DS1621 sensor=DS1621(addr);
 }
