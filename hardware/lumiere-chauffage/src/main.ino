@@ -1,6 +1,8 @@
-#include <Wire.h>
-#include <DS1621.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
+String arduinoId = "arduino-cafet";
 int photocellPin = 0;
 int photocellReading;
 
@@ -16,9 +18,11 @@ void setup() {
 void loop() {
 	if (WiFi.status() == WL_CONNECTED) {
 		photocellReading = analogRead(photocellPin);
+		int photocellValue = (photocellReading / 1024.0) * 100;
 		StaticJsonBuffer<300> JSONbuffer;
 		JsonObject& JSONencoder = JSONbuffer.createObject();
-		JSONencoder["value"] = photocellReading;
+		JSONencoder["id"] = arduinoId;
+		JSONencoder["value"] = photocellValue;
 		char JSONmessageBuffer[300];
 		JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
 		Serial.println(JSONmessageBuffer);
@@ -32,6 +36,4 @@ void loop() {
 		http.end();
 	}
 	delay(250);
-	byte addr = (0x90 >> 1) | 0;
-	DS1621 sensor=DS1621(addr);
 }
