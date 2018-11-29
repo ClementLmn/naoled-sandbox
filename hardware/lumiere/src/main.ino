@@ -1,29 +1,32 @@
 #include <elapsedMillis.h>
 
+// NAME : TESLA
+
 elapsedMillis timeElapsed;
 unsigned int interval = 30000; // 30s
 
 bool shouldSend = true;
 // On défini à partir de quelle valeur la lumière est allumé
-int lightIsOn = 20;
+int lightIsOn = 80;
 
-int motionSensorLeft = D7;
-int motionSensorRight = D8;
+int motionSensor = D7;
 
-int photoSensorLeft = 0;
-int photoSensorRight = 1;
+int photoSensor = 0;
+// int photoSensorRight = 1;
 
 void setup() {
   // Photosensor
-  pinMode(photoSensorLeft, INPUT_PULLUP);
-  pinMode(photoSensorRight, INPUT_PULLUP);
+  Serial.begin(115200);
+  pinMode(photoSensor, INPUT_PULLUP);
+  // pinMode(photoSensorRight, INPUT_PULLUP);
   // Motionsensor
-  pinMode(motionSensorLeft, INPUT);
-  pinMode(motionSensorRight, INPUT);
+  pinMode(motionSensor, INPUT);
 }
 
 
 void loop() {
+  movement();
+  light();
   if (movement()) {
     timeElapsed = 0;
     shouldSend = true;
@@ -32,12 +35,15 @@ void loop() {
       sendData();
       shouldSend = false;
   }
+  Serial.println("Loop Fini");
+  delay(1000);
 }
 
 bool movement() {
-  long stateMotionSensorLeft = digitalRead(motionSensorLeft);
-  long stateMotionSensorRight = digitalRead(motionSensorRight);
-  if(stateMotionSensorLeft !== HIGH && stateMotionSensorRight !== HIGH){
+  long stateMotionSensor = digitalRead(motionSensor);
+  Serial.print("Mouvement : ");
+  Serial.println(stateMotionSensor);
+  if(stateMotionSensor != HIGH){
     return false;
   }else{
     return true;
@@ -46,16 +52,18 @@ bool movement() {
 
 bool light() {
   // On récupère les données du capteur de lumière
-  int statePhotoSensorLeft = analogRead(photoSensorLeft);
-  int statePhotoSensorRight = analogRead(photoSensorRight);
+  int statePhotoSensor = analogRead(photoSensor);
   // on formate
-  int statePhotoSensorLeftFormate = (statePhotoSensorLeft / 1024.0) * 100;
-  int statePhotoSensorRightFormate = (statePhotoSensorRight / 1024.0) * 100;
-  if(statePhotoSensorLeftFormate > lightIsOn && statePhotoSensorRightFormate > lightIsOn){
+  int statePhotoSensorFormate = (statePhotoSensor / 1024.0) * 100;
+  Serial.print("Light : ");
+  Serial.println(statePhotoSensorFormate);
+  if(statePhotoSensorFormate > lightIsOn){
     return true;
   }else{
     return false;
   }
 }
 
-void sendData() {}
+void sendData() {
+  Serial.print("Message envoyé");
+}

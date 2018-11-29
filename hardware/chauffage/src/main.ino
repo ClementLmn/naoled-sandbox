@@ -1,6 +1,8 @@
 #include <Wire.h>
 #include <DS1621.h>
 
+// NAME : MAMAN
+
 byte addr = (0x90 >> 1) | 0;
 DS1621 sensor=DS1621(addr);
 
