@@ -1,6 +1,8 @@
 #include <Wire.h>
 #include <DS1621.h>
 
+// NAME : MAMAN
+
 byte addr = (0x90 >> 1) | 0;
 DS1621 sensor=DS1621(addr);
 
@@ -15,36 +17,28 @@ void setup() {
 }
 
 void loop() {
-  int stateDoor = digitalRead(0);
-
+	// On vérifie si la porte reste ouverte toutes les 5 secondes
   int delayTime = 5000;
-  int i = 1;
+	// On défini à partir de quelle température on considère le radiateur comme "allumé"
+	int tempRadiateur = 20;
+
+	int i = 1;
+	int stateDoor = digitalRead(0);
   if(stateDoor){
     while (1) {
       int newStateDoor = digitalRead(0);
-
       if(newStateDoor){
-        int tempAct, tempForm;
-        // On récupère la température en centième de degrés
-        tempAct = sensor.getHrTemp();
-        // On divise par cent pour récupérer la température exacte
-        tempForm = tempAct / 100;
-
-        if(i > 10){
-          Serial.print("La porte est ouverte depuis trop longtemps ! Il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
-        }else if(i == 1){
-          Serial.print("La porte viens de s'ouvrir et il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
-        }else{
-          int timeForm = (delayTime / 1000) * i;
-          Serial.print("La porte est ouverte depuis ");
-          Serial.print(timeForm);
-          Serial.print(" secondes et il fait actuellement ");
-          Serial.print(tempForm);
-          Serial.println("° C.");
+				// La porte est ouverte depuis plus d'une minute
+        if(i > 11){
+					int tempAct, tempForm;
+					// On récupère la température en centième de degrés
+					tempAct = sensor.getHrTemp();
+					// On divise par cent pour récupérer la température exacte
+					tempForm = tempAct / 100;
+					// On vérifie si le radiateur est allumé
+					if(tempForm > tempRadiateur){
+						Serial.print("La porte est ouverte depuis plus d'une minute et le radiateur est allumé !");
+					}
         }
         delay(delayTime);
       }else{

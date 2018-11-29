@@ -1,6 +1,8 @@
 #include <Button.h>
 #include <Adafruit_NeoPixel.h>
 
+// NAME : STANNAH
+
 #define PIN_STRIP 3
 
 // How many leds in your strip?
@@ -17,12 +19,12 @@ void setup() {
   strip.show();
 }
 
-void loop() { 
+void loop() {
   if(button.uniquePress()){
-    Serial.println("pressed"); 
+    Serial.println("pressed");
     boom(strip.Color(255, 0, 0), 1000, MAX_LEDS, 5);
   }else{
-    Serial.println("not pressed"); 
+    Serial.println("not pressed");
   }
 }
 
