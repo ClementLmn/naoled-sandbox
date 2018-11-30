@@ -1,5 +1,5 @@
-// #include <ESP8266HTTPClient.h>
-// #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
 // NAME : ELSA
@@ -10,14 +10,15 @@ int state = LOW;             // by default, no motion detected
 int val = 0;                 // variable to store the sensor status (value)
 
 void setup() {
+  Serial.begin(115200);
+  WiFi.begin("Honor 5C", "azertyuiop");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+
   pinMode(led, OUTPUT);      // initalize LED as an output
   pinMode(sensor, INPUT);    // initialize sensor as an input
-	Serial.begin(115200);
-	// WiFi.begin("iPhoneX de Clément", "blablabla");
-	// while (WiFi.status() != WL_CONNECTED) {
-	// 	Serial.println(".");
-	// 	delay(500);
-	// }
+
 }
 
 void loop() {
@@ -32,6 +33,12 @@ void loop() {
 
     if (state == LOW) {
       Serial.println("Motion detected!");
+
+      StaticJsonBuffer<300> JSONbuffer;
+      JsonObject& listData = JSONbuffer.createObject();
+      listData["name"] = "ELSA";
+      sendData(listData);
+
       state = HIGH;       // update variable state to HIGH
     }
   }
@@ -44,24 +51,34 @@ void loop() {
         state = LOW;       // update variable state to LOW
     }
   }
+}
 
-	// if (WiFi.status() == WL_CONNECTED) {
-  //   sensorValue = digitalRead(SensorSignal); // read the value of pin 2, should be high or low
-	// 	StaticJsonBuffer<300> JSONbuffer;
-	// 	JsonObject& JSONencoder = JSONbuffer.createObject();
-	// 	JSONencoder["name"] = "test";
-	// 	JSONencoder["value"] = sensorValue;
-	// 	char JSONmessageBuffer[300];
-	// 	JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
-	// 	Serial.println(JSONmessageBuffer);
-	// 	HTTPClient http;
-	// 	http.begin("http://192.168.1.230:3000/api");
-	// 	http.addHeader("Content-Type", "application/json");
-	// 	int httpCode = http.POST(JSONmessageBuffer);
-	// 	String payload = http.getString();
-	// 	Serial.println(httpCode);
-	// 	Serial.println(payload);
-	// 	http.end();
-  //   delay(100);
-	// }
+void sendData(listData) {
+  if (WiFi.status() == WL_CONNECTED) {
+    //Declare object of class HTTPClient
+    HTTPClient http;
+    // Prettier data
+    char JSONmessageBuffer[300];
+    listData.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
+    // connect api
+    http.begin("http://api-naoled.cleverapps.io/ADDLIGHT");
+    http.addHeader("Content-Type", "application/json");
+    // send data
+    int httpCode = http.POST(JSONmessageBuffer);
+    // <0 if error
+    if(httpCode > 0){
+      Serial.printf("[HTTP] POST... code: %d\n", httpCode);
+      String payload = http.getString();
+      // HTTP return code
+      Serial.println(httpCode);
+      // request response payload
+      Serial.println(payload);
+    }else{
+      Serial.printf("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    http.end();
+    Serial.print("Message envoyé");
+  }else{
+    Serial.printf("[HTTP} Internet not found\n");
+  }
 }

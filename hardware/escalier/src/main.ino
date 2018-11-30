@@ -1,6 +1,5 @@
 #include <Button.h>
-#define FASTLED_ESP8266_D1_PIN_ORDER
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 
 // NAME : STANNAH
 
@@ -72,4 +71,11 @@ void anim(uint8_t num_led, uint8_t wave_size, CRGB led_color) {
 
     delay(10);
   }
+
+  for(j=0; j<wave_size; j++) {
+    strip.setPixelColor(j + 1, strip.Color(0, 0, 0));
+    strip.setPixelColor(total-j+1, strip.Color(0, 0, 0));
+    strip.show();
+  }
+  delay(wait);
 }
