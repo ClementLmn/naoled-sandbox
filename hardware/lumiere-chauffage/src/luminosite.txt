@@ -6,5 +6,6 @@ void setup() {
 }
 
 void loop() {
-	JSONencoder["value"] = photocellReading;	
+	JSONencoder["value"] = photocellReading;
+    int photocellValue = (photocellReading / 1024.0) * 100;
 }
