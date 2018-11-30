@@ -8,6 +8,10 @@
 
 byte addr = (0x90 >> 1) | 0;
 DS1621 sensor=DS1621(addr);
+int stateDoor = 0;
+bool messageStatus = false;
+
+
 
 void setup() {
 	Serial.begin(115200);
@@ -16,7 +20,7 @@ void setup() {
 		delay(500);
 	}
 
-  pinMode(0, INPUT_PULLUP);
+  pinMode(D5, INPUT_PULLUP);
 
   sensor.startConversion(false);
   sensor.setConfig(DS1621::POL | DS1621::ONE_SHOT);
@@ -31,29 +35,42 @@ void loop() {
 	int tempRadiateur = 20;
 
 	int i = 1;
-	int stateDoor = digitalRead(0);
+	int stateDoor = digitalRead(D5);
+
   if(stateDoor){
     while (1) {
-      int newStateDoor = digitalRead(0);
+      int newStateDoor = digitalRead(D5);
       if(newStateDoor){
 				// La porte est ouverte depuis plus d'une minute
         if(i > 11){
+
 					int tempAct, tempForm;
 					// On récupère la température en centième de degrés
 					tempAct = sensor.getHrTemp();
 					// On divise par cent pour récupérer la température exacte
 					tempForm = tempAct / 100;
+
 					// On vérifie si le radiateur est allumé
-					if(tempForm > tempRadiateur){
+					if((tempForm > tempRadiateur) && !messageStatus){
 						StaticJsonBuffer<300> JSONbuffer;
 						JsonObject& listData = JSONbuffer.createObject();
 						listData["name"] = "MAMAN";
+						listData["status"] = 1;
 						sendData(listData);
+						messageStatus = true;
 					}
         }
         delay(delayTime);
       }else{
-        Serial.println("La porte est fermé");
+				if(messageStatus){
+					StaticJsonBuffer<300> JSONbuffer;
+					JsonObject& listData = JSONbuffer.createObject();
+					listData["name"] = "MAMAN";
+					listData["status"] = 0;
+					sendData(listData);
+					messageStatus = false;
+				}
+				Serial.println("La porte est fermé");
         break;
       }
       i++;
@@ -62,7 +79,7 @@ void loop() {
   delay(500);
 }
 
-void sendData(listData) {
+void sendData(JsonObject& listData) {
   if (WiFi.status() == WL_CONNECTED) {
     //Declare object of class HTTPClient
     HTTPClient http;
@@ -70,7 +87,7 @@ void sendData(listData) {
     char JSONmessageBuffer[300];
     listData.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
     // connect api
-    http.begin("http://api-naoled.cleverapps.io/ADDWARM");
+    http.begin("http://api-naoled.cleverapps.io/doors");
     http.addHeader("Content-Type", "application/json");
     // send data
     int httpCode = http.POST(JSONmessageBuffer);
