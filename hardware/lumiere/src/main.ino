@@ -6,7 +6,7 @@
 // NAME : THOMAS-GUILLET
 
 elapsedMillis timeElapsed;
-unsigned int interval = 3000; // 30s
+unsigned int interval = 30000; // 30s
 
 bool shouldSend = true;
 // On défini à partir de quelle valeur la lumière est allumé
@@ -63,8 +63,7 @@ void loop() {
 
 bool movement() {
   long stateMotionSensor = digitalRead(motionSensor);
-  if(stateMotionSensor == HIGH){
-  // if(stateMotionSensor != HIGH){
+  if(stateMotionSensor != HIGH){
     return false;
   }else{
     return true;
