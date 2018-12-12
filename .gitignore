@@ -1,3 +1,6 @@
+# platformio
+.pioenvs
+.piolibdeps
 # Logs
 logs
 *.log
