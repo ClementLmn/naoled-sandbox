@@ -15,9 +15,9 @@ void setup() {
 void loop() {
 	if(button.uniquePress()){
 		StaticJsonBuffer<300> JSONbuffer;
-		JsonObject& listData = JSONbuffer.createObject();
-		listData["name"] = id;
-		post(listDataIn, "addAshbin");
+		JsonObject& data = JSONbuffer.createObject();
+		data["name"] = id;
+		post(data, "addAshbin");
 		goLight();
 	}
 }
