@@ -8,8 +8,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.DS-Store
-**/.DS-Store
+.DS_Store
+**/.DS_Store
 
 /.vscode
 

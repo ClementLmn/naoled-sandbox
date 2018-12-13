@@ -6,6 +6,7 @@ void wifiConnect(const char* ssid, const char* password) {
 		delay(500);
 		Serial.print(".");
 	}
+	Serial.println(WiFi.localIP());
 }
 void wifiConnect() {
 	wifiConnect("ECV", "esperluette");
