@@ -31,7 +31,7 @@ void loop() {
 		StaticJsonBuffer<300> JSONbuffer;
 		JsonObject& listDataIn = JSONbuffer.createObject();
 		listDataIn["name"] = id;
-		post(listDataIn, "api");
+		post(listDataIn, "setTrashIn");
 		// wait 10 secs before being able to post again
 		delay(10000);
 	}

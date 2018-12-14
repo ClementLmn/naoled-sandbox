@@ -9,7 +9,7 @@ const int echoPin = D3;
 long duration;
 float avg;
 const int measuresCount = 300;
-const float threshold = 10.0;
+const float threshold = 7.0;
 
 bool previousCheck = false;
 
@@ -56,12 +56,6 @@ float checkMultiple(int count) {
 		if (current < min) min = current;
 		if (current > max) max = current;
 		total += current;
-		if(i > (count - 16)){
-			max += current;
-		}
-		if(i < 16){
-			min += current;
-		}
 		delayMicroseconds(10);
 	}
 	// remove the biggest and smallest measurements to avoid bad ones
