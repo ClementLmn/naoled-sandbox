@@ -33,7 +33,7 @@ void loop() {
 		listDataIn["name"] = id;
 		post(listDataIn, "setTrashIn");
 		// wait 10 secs before being able to post again
-		delay(10000);
+		// delay(10000);
 	}
 	previousCheck = currentCheck;
 	delay(100);

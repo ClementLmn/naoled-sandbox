@@ -17,7 +17,7 @@ int interval = 10;
 void setup() {
 	Serial.begin(115200);
 	delay(5000);
-	wifiConnect("zaki", "f35dac11528da");
+	wifiConnect();
 
 	server.on("/", handleHomeRequest);
 	server.on("/api", handleAPIRequest);
