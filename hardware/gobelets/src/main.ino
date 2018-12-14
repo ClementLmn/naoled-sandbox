@@ -15,7 +15,7 @@ bool previousCheck = false;
 
 void setup() {
 	Serial.begin(115200);
-	wifiConnect("zaki", "f35dac11528da");
+	wifiConnect();
 	pinMode(trigPin, OUTPUT);
 	pinMode(echoPin, INPUT);
 }
@@ -31,7 +31,7 @@ void loop() {
 		StaticJsonBuffer<300> JSONbuffer;
 		JsonObject& listDataIn = JSONbuffer.createObject();
 		listDataIn["name"] = id;
-		post(listDataIn, "api", "http://192.168.43.181:3000/");
+		post(listDataIn, "api");
 		// wait 10 secs before being able to post again
 		delay(10000);
 	}
