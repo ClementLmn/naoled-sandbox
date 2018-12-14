@@ -17,9 +17,9 @@ void setup() {
 }
 
 void loop(){
-	int stateDoor = digitalRead(D5);
+	int isOpen = digitalRead(D5);
 
-	if (stateDoor) {
+	if (isOpen) {
 		if ((timeElapsed > interval) && !messageStatus) {
 			StaticJsonBuffer<300> JSONbuffer;
 			JsonObject& data = JSONbuffer.createObject();
