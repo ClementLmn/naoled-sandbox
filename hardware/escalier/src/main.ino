@@ -1,10 +1,13 @@
 #include <SPI.h>
 #include <Ethernet.h>
+#include <ArduinoHttpClient.h>
 #include <FastLED.h>
 #include <Button.h>
 #include <ArduinoJson.h>
 
 const String id = "ELSA";
+
+
 
 #define PIN_STRIP_1 2
 #define PIN_STRIP_2 14
@@ -22,8 +25,9 @@ const int center_3 = 149;
 Button button = Button(11, INPUT_PULLUP);
 
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-byte ip[] = { 192, 168, 10, 2 };
-EthernetClient client;
+// byte ip[] = { 192, 168, 10, 2 };
+EthernetClient eth;
+HttpClient client = HttpClient(eth, "api-naoled.cleverapps.io", 80);
 
 
 void setup() {
@@ -37,7 +41,7 @@ void setup() {
 	delay(200);
 	clear();
 	// ethernet start
-	Ethernet.begin(mac, ip);
+	Ethernet.begin(mac);
 }
 
 void loop() {
@@ -46,10 +50,7 @@ void loop() {
 		anim(CRGB(0, 0, 0));
 		post();
 	}
-	if (client.connected()) {
-		client.stop();
-	}
-	delay(50);
+	delay(100);
 }
 
 void anim(CRGB led_color) {
@@ -88,13 +89,14 @@ void clear() {
 
 void post() {
 	String data = "{\"name\":\"" + id + "\"}";
-	if (client.connect("192.168.10.1", 3000)) {
-		client.println("POST /api HTTP/1.1");
-		client.println("Host: 192.168.10.1");
-		client.println("Content-Type: application/json");
-		client.print("Content-Length: ");
-		client.println(data.length());
-		client.println();
-		client.print(data);
-	}
+	String contentType = "application/json";
+	Serial.println("posting ...");
+	client.post("/stairs", contentType, data);
+	int statusCode = client.responseStatusCode();
+    String response = client.responseBody();
+
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+    Serial.print("Response: ");
+    Serial.println(response);
 }
